@@ -9,7 +9,9 @@
 import argparse
 import json
 import pathlib
+import random
 import re
+import time
 
 import feedparser
 import requests
@@ -17,8 +19,9 @@ from bs4 import BeautifulSoup
 
 
 class HaloDB:
-    def __init__(self):
+    def __init__(self, considerate=False):
         self.url = "https://halo-db.pa.op.dlr.de"
+        self.considerate = considerate
 
         user_config = pathlib.Path("~/.halodb").expanduser()
         with open(user_config, "r") as fp:
@@ -105,6 +108,9 @@ class HaloDB:
                 print(f"Skip {fp}")
                 continue
 
+            if self.considerate:
+                time.sleep(random.randint(10, 50) / 10)
+
             print(f"Download {fp}")
             self.download(url, fp)
 
@@ -112,7 +118,10 @@ class HaloDB:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="HALO Download Bot")
     parser.add_argument("-m", "--mission", default=141, help="Mission ID")
+    parser.add_argument(
+        "--considerate", action="store_true", help="Wait between downloads"
+    )
     args = parser.parse_args()
 
-    halodb = HaloDB()
+    halodb = HaloDB(considerate=args.considerate)
     halodb.downloads_all_datasets(mission_id=args.mission)
