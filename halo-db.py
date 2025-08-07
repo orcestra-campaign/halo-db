@@ -93,7 +93,7 @@ class HaloDB:
             "release": release,
         }
 
-    def downloads_all_datasets(self, mission_id):
+    def download_all_datasets(self, mission_id):
         for ds in self.get_datasets(mission_id=mission_id):
             dataset_id = ds["dataset_id"]
             release = ds["release"]
@@ -124,4 +124,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     halodb = HaloDB(considerate=args.considerate)
-    halodb.downloads_all_datasets(mission_id=args.mission)
+    halodb.download_all_datasets(mission_id=args.mission)
