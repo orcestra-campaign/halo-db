@@ -93,16 +93,14 @@ class HaloDB:
             "release": release,
         }
 
-    def download_all_datasets(self, mission_id):
+    def download_all_datasets(self, mission_id, outdir):
         for ds in self.get_datasets(mission_id=mission_id):
             dataset_id = ds["dataset_id"]
             release = ds["release"]
             filename = ds["filename"]
             url = ds["file_url"]
 
-            fp = pathlib.Path(
-                f"HALO-DB_dataset{dataset_id}_release{release}_{filename}"
-            )
+            fp = outdir / f"HALO-DB_dataset{dataset_id}_release{release}_{filename}"
 
             if fp.exists():
                 print(f"Skip {fp}")
@@ -118,10 +116,11 @@ class HaloDB:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="HALO Download Bot")
     parser.add_argument("-m", "--mission", help="Mission ID")
+    parser.add_argument("-o", "--outdir", type=pathlib.Path, default=".")
     parser.add_argument(
         "--considerate", action="store_true", help="Wait between downloads"
     )
     args = parser.parse_args()
 
     halodb = HaloDB(considerate=args.considerate)
-    halodb.download_all_datasets(mission_id=args.mission)
+    halodb.download_all_datasets(mission_id=args.mission, outdir=args.outdir)
