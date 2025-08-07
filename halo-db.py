@@ -117,7 +117,7 @@ class HaloDB:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="HALO Download Bot")
-    parser.add_argument("-m", "--mission", default=141, help="Mission ID")
+    parser.add_argument("-m", "--mission", help="Mission ID")
     parser.add_argument(
         "--considerate", action="store_true", help="Wait between downloads"
     )

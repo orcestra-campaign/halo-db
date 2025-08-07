@@ -11,7 +11,7 @@ To access the [HALO DB](http://halo-db.pa.op.dlr.de), create a file `~/.halodb` 
 }
 ```
 
-Afterwards, you can download all the datasets for a given mission by specifying its mission ID:
+Afterwards, you can download all the datasets for a given mission by specifying its mission ID (e.g. [141](http://halo-db.pa.op.dlr.de/mission/141) for PERCUSION):
 ```sh
 uv run halo-db.py -m 141
 ```
