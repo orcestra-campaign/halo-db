@@ -36,20 +36,21 @@ class HaloDB:
 
         self._cookie = response.headers.get("Set-Cookie").split(";")[0]
 
-    def get(self, url):
+    def get(self, url, stream=False):
         headers = headers = {"Cookie": self._cookie}
 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, stream=stream)
         response.raise_for_status()
 
         return response
 
-    def download(self, url, path):
-        response = self.get(url)
+    def download(self, url, path, chunk_size=1_048_576):
+        response = self.get(url, stream=True)
 
         fp_part = path.with_suffix(".partial")
         with open(fp_part, "wb") as fp:
-            fp.write(response.content)
+            for buf in response.iter_content(chunk_size=chunk_size):
+                fp.write(buf)
 
         fp_part.rename(path)
 
