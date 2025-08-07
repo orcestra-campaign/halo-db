@@ -6,6 +6,7 @@
 #     "requests",
 # ]
 # ///
+import argparse
 import json
 import pathlib
 import re
@@ -52,8 +53,8 @@ class HaloDB:
 
         fp_part.rename(path)
 
-    def get_datasets(self, mission=141):
-        feed_url = rf"{self.url}/mission/{mission}?format=rss"
+    def get_datasets(self, mission_id):
+        feed_url = rf"{self.url}/mission/{mission_id}?format=rss"
         feed = feedparser.parse(feed_url)
 
         yield from (self.extract_dataset_metadata(entry) for entry in feed.entries)
@@ -88,8 +89,8 @@ class HaloDB:
             "release": release,
         }
 
-    def downloads_all_datasets(self):
-        for ds in self.get_datasets():
+    def downloads_all_datasets(self, mission_id):
+        for ds in self.get_datasets(mission_id=mission_id):
             dataset_id = ds["dataset_id"]
             release = ds["release"]
             filename = ds["filename"]
@@ -108,5 +109,9 @@ class HaloDB:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog="HALO Download Bot")
+    parser.add_argument("-m", "--mission", default=141, help="Mission ID")
+    args = parser.parse_args()
+
     halodb = HaloDB()
-    halodb.downloads_all_datasets()
+    halodb.downloads_all_datasets(mission_id=args.mission)
